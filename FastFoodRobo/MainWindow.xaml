@@ -1,0 +1,135 @@
+﻿<Window x:Class="FastFoodRobo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="FastFoot Robo!" Height="400" Width="550" MinHeight="350" MinWidth="450" 
+        Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid Margin="5,0,0,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding GroupingProducts}"  >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <GroupBox MinHeight="50">
+                                <GroupBox.Header>
+                                    <TextBlock Text="{Binding ProductGroupName}" FontSize="15"/>
+                                </GroupBox.Header>
+                                <ItemsControl ItemsSource="{Binding Products}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="3*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <RadioButton Content="{Binding Path=Name}" 
+                                                             GroupName="{Binding ClassProduct}" 
+                                                             IsChecked="{Binding Path=IsChecked}" VerticalContentAlignment="Center" Margin="5,2"/>
+                                                <Label Content="{Binding Price}" Grid.Column="1" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="5,2"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="1" MinHeight="50">
+                                <GroupBox.Header>
+                                    <TextBlock Text="Добавки" FontSize="15"/>
+                                </GroupBox.Header>
+                                <ItemsControl ItemsSource="{Binding Products}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+
+                                            <ItemsControl ItemsSource="{Binding Supplements}" Visibility="{Binding IsChecked, Converter={StaticResource BoolToVis}}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="3*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <CheckBox Content="{Binding Name}" 
+                                                                      IsChecked="{Binding IsChecked}"
+                                                                      IsEnabled="{Binding IsNotRequrement}"
+                                                                      VerticalContentAlignment="Center" Margin="5,2"/>
+                                                            <Label Content="{Binding Price}" Grid.Column="1"
+                                                                   HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="5,2"/>
+                                                        </Grid>
+
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Vertical" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                            </ItemsControl>
+
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </GroupBox>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" HorizontalAlignment="Left" Margin="0" >
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Стоимость:" FontSize="15" FontWeight="Bold" HorizontalAlignment="Left" Padding="0,5,5,5"/>
+                <TextBox Text="{Binding Cost}" IsReadOnly="True" Margin="5,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Button Content="Выдать"  Command="{Binding ClickCommand}"
+                    Margin="0" Padding="5,1" Height="30" FontSize="15"/>
+        </StackPanel>
+
+        <CheckBox Grid.Row="1" Content="Комплексный набор" IsChecked="{Binding IsComplexSet}"
+                  HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16"/>
+
+        <Grid Grid.RowSpan="3" Visibility="{Binding IsPreparing, Converter={StaticResource BoolToVis}}">
+            <Grid.Background>
+                <SolidColorBrush Color="#FFEAEAEA" Opacity="0.401"/>
+            </Grid.Background>
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Width="300" Height="100" Background="White" BorderBrush="Black" 
+                    BorderThickness="1" CornerRadius="5" >
+                <Label Content="{Binding MessageNotifyForPreparing}" HorizontalAlignment="Center" VerticalAlignment="Center" FontStyle="Italic" FontSize="15"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
